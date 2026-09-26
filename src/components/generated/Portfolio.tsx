@@ -1,13 +1,11 @@
 import * as React from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Award, ChevronRight, Cpu, Download, ExternalLink, FileText, Github, Layout, Linkedin, Mail, Menu, ShieldCheck, X } from "lucide-react";
+import { Award, Check, ChevronRight, Cpu, Download, ExternalLink, FileText, Github, Layout, Linkedin, Mail, Menu, ShieldCheck, X } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "../../lib/utils";
 import {
-  canOpenIrsLive,
   canUseLocalDevApis,
   getIrsAppUrl,
-  getPrinterAppUrl,
 } from "../../config/site";
 interface NavLink {
   name: string;
@@ -44,6 +42,7 @@ interface SectionTitleProps {
   light?: boolean;
 }
 const IRS_REPOSITORY_URL = "https://github.com/PrabeshTaksari/Intelligence-Recon-System";
+const PRINTER_REPOSITORY_URL = "https://github.com/PrabeshTaksari/Printer-ecommerce-site";
 const NAV_LINKS: NavLink[] = [{
   name: "Home",
   href: "#home"
@@ -64,9 +63,9 @@ const NAV_LINKS: NavLink[] = [{
   href: "#contact"
 }];
 const TECHNICAL_SKILLS: Skill[] = [{
-  name: "HTML",
+  name: "HTML & CSS",
 }, {
-  name: "CSS",
+  name: "Networking",
 }, {
   name: "JavaScript",
 }, {
@@ -170,7 +169,7 @@ const PROJECTS: Project[] = [{
   }, {
     name: "John the Ripper"
   }],
-  link: "/23047464 Prabesh Sundar Taksari (1).pdf",
+  link: "/ethical-hacking-simulation-report.pdf",
   featured: false
 }, {
   title: "Backdoor Exploit Analysis - vsftpd 2.3.4",
@@ -246,6 +245,7 @@ export const Portfolio = () => {
   const [activeSection, setActiveSection] = React.useState("home");
   const [previewCertificate, setPreviewCertificate] = React.useState<Certification | null>(null);
   const [isIrsSetupPromptOpen, setIsIrsSetupPromptOpen] = React.useState(false);
+  const [isMessageSentOpen, setIsMessageSentOpen] = React.useState(false);
   const [irsHostHasFiles, setIrsHostHasFiles] = React.useState(false);
   const [profileImageSrc, setProfileImageSrc] = React.useState("/ba9e027c-9c1e-4aeb-b28e-2bca8d151629.jpeg");
   const [isSubmittingContact, setIsSubmittingContact] = React.useState(false);
@@ -297,33 +297,7 @@ export const Portfolio = () => {
 
     if (project.title === "Printer E-Commerce Website") {
       event.preventDefault();
-
-      const printerUrl = getPrinterAppUrl();
-      if (printerUrl && !canUseLocalDevApis()) {
-        window.open(printerUrl, "_blank", "noopener,noreferrer");
-        return;
-      }
-
-      if (!canUseLocalDevApis()) {
-        toast.error("Printer demo is not hosted online yet. Set VITE_PRINTER_PUBLIC_URL after deploy.");
-        return;
-      }
-
-      try {
-        const response = await fetch("/api/start-printer-site", {
-          method: "POST"
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          toast.error(errorData.message || "The printer website could not be started locally.");
-          return;
-        }
-
-        window.open(printerUrl, "_blank", "noopener,noreferrer");
-      } catch {
-        toast.error("Unable to open the printer website right now.");
-      }
+      window.open(PRINTER_REPOSITORY_URL, "_blank", "noopener,noreferrer");
       return;
     }
   };
@@ -361,7 +335,7 @@ export const Portfolio = () => {
         throw new Error("Message delivery failed");
       }
 
-      toast.success("Your message was sent successfully. I’ll get back to you soon.");
+      setIsMessageSentOpen(true);
       formElement.reset();
     } catch {
       toast.error("Sorry, your message could not be sent right now. Please try again.");
@@ -468,7 +442,7 @@ export const Portfolio = () => {
               <p className="mt-7 max-w-2xl text-xl font-semibold leading-8 text-[#E01010] md:text-2xl">
                 <span>Aspiring Web Developer with a cybersecurity mindset.</span>
               </p>
-              <p className="mt-6 max-w-2xl text-base leading-8 text-gray-300 md:text-lg">
+              <p className="mt-6 max-w-2xl text-base leading-8 text-gray-300 md:text-lg text-justify">
                 <span>
                   Building practical digital experiences, security-focused tools, and well-documented technical solutions with steady discipline and curiosity.
                 </span>
@@ -490,14 +464,14 @@ export const Portfolio = () => {
                   <p className="text-sm font-bold uppercase tracking-[0.24em] text-gray-400">
                     <span>Focus</span>
                   </p>
-                  <p className="mt-3 text-lg font-normal tracking-normal text-white md:text-xl">
+                  <p className="mt-3 text-lg font-normal tracking-normal text-white md:text-xl text-justify">
                     <span>Web Developer & IT Security Graduate passionate about building clean, secure, and user-friendly digital solutions.</span>
                   </p>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="rounded-3xl bg-white/[0.04] p-4 md:p-5">
                     <p className="text-2xl font-black text-white md:text-3xl">
-                      <span>06</span>
+                      <span>07</span>
                     </p>
                     <p className="mt-2 text-sm leading-6 text-gray-400">
                       <span>Applied projects</span>
@@ -547,7 +521,7 @@ export const Portfolio = () => {
             once: true
           }}>
               <SectionTitle title="About Me" />
-              <div className="space-y-6 text-lg leading-8 text-gray-700">
+              <div className="space-y-6 text-lg leading-8 text-gray-700 text-justify">
                 <p>
                   <span>I recently completed my Bachelor&apos;s degree in </span>
                   <strong className="font-bold text-black">BSc (Hons) Computer Networking and IT Security</strong>
@@ -621,7 +595,7 @@ export const Portfolio = () => {
                 <h4 className="text-lg font-black tracking-[-0.02em] text-white">
                   <span>Ready for New Challenges</span>
                 </h4>
-                <p className="mt-3 text-sm leading-7 text-gray-300">
+                <p className="mt-3 text-sm leading-7 text-gray-300 text-justify">
                   <span>Always exploring new frameworks, security practices, and design methods to keep improving.</span>
                 </p>
               </article>
@@ -660,7 +634,7 @@ export const Portfolio = () => {
                   <h3 className="text-2xl font-black leading-tight tracking-[-0.04em] text-black md:text-3xl">
                     <span>{project.title}</span>
                   </h3>
-                  <p className="mt-5 flex-grow text-base leading-8 text-gray-600">
+                  <p className="mt-5 flex-grow text-base leading-8 text-gray-600 text-justify">
                     <span>{project.description}</span>
                   </p>
                   <div className="mt-7 flex flex-wrap gap-2" aria-label={`${project.title} technology stack`}>
@@ -772,18 +746,13 @@ export const Portfolio = () => {
                 </div>
 
                 <div className="space-y-6 px-6 py-6 md:px-8 md:py-7">
-                  <p className="text-base leading-8 text-gray-300 md:text-lg">
+                  <p className="text-base leading-8 text-gray-300 md:text-lg text-justify">
                     <span>
                       Open the live Intelligence Recon System in your browser. Each device starts with its own clean default state. If you want the full source code to run locally, use the GitHub option.
                     </span>
                   </p>
 
                   <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                    <button type="button" disabled={!canOpenIrsLive()} onClick={() => {
-                  void openIrsApp(false);
-                }} className="inline-flex flex-1 items-center justify-center rounded-full border border-white/15 px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-white transition-colors hover:border-white hover:bg-white hover:text-black disabled:cursor-not-allowed disabled:opacity-40">
-                      <span>Open IRS app</span>
-                    </button>
                     {irsHostHasFiles ? <button type="button" onClick={() => {
                   void openIrsApp(true);
                 }} className="inline-flex flex-1 items-center justify-center rounded-full border border-[#E01010]/40 px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-[#E01010] transition-colors hover:border-[#E01010] hover:bg-[#E01010] hover:text-white">
@@ -806,6 +775,41 @@ export const Portfolio = () => {
             </motion.div> : null}
         </AnimatePresence>
 
+        <AnimatePresence>
+          {isMessageSentOpen ? <motion.div initial={{
+          opacity: 0
+        }} animate={{
+          opacity: 1
+        }} exit={{
+          opacity: 0
+        }} className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 px-4 py-8 backdrop-blur-sm" onClick={() => setIsMessageSentOpen(false)}>
+              <motion.div initial={{
+            opacity: 0,
+            scale: 0.96,
+            y: 14
+          }} animate={{
+            opacity: 1,
+            scale: 1,
+            y: 0
+          }} exit={{
+            opacity: 0,
+            scale: 0.96,
+            y: 14
+          }} className="w-full max-w-md overflow-hidden rounded-[2rem] border border-white/10 bg-black p-8 text-center text-white shadow-2xl" onClick={e => e.stopPropagation()}>
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#E01010]/15 text-[#E01010]">
+                  <Check size={32} aria-hidden="true" />
+                </div>
+                <h3 className="mt-5 text-2xl font-black tracking-[-0.04em]">Message Sent!</h3>
+                <p className="mt-3 text-base leading-8 text-gray-300">
+                  <span>Thank you for reaching out. I&apos;ll get back to you soon.</span>
+                </p>
+                <button type="button" onClick={() => setIsMessageSentOpen(false)} className="mt-7 w-full rounded-full bg-[#E01010] px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-white transition-colors hover:bg-[#bd0d0d]">
+                  <span>Okay</span>
+                </button>
+              </motion.div>
+            </motion.div> : null}
+        </AnimatePresence>
+
         <section id="contact" className="bg-[#111111] py-24 text-white md:py-32">
           <div className="mx-auto w-full max-w-7xl px-5 md:px-8 lg:px-12">
             <div className="grid grid-cols-1 gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
@@ -814,7 +818,7 @@ export const Portfolio = () => {
                 <p id="contact-title" className="sr-only">
                   <span>Get In Touch</span>
                 </p>
-                <p className="max-w-xl text-lg leading-8 text-gray-300 md:text-xl">
+                <p className="max-w-xl text-lg leading-8 text-gray-300 md:text-xl text-justify">
                   <span>
                     I&apos;m open to opportunities, collaborations, and learning experiences. If you have a project in mind or want to connect, feel free to reach out.
                   </span>
@@ -834,20 +838,18 @@ export const Portfolio = () => {
                       </span>
                     </a>
                   </article>
-                  <article className="rounded-2xl border-l-2 border-[#E01010] bg-white/[0.04] p-5">
-                    <div className="flex items-center gap-5">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black">
+                  <article className="rounded-2xl border-l-2 border-[#E01010] bg-white/[0.04] p-5 transition-colors hover:bg-white/[0.06]">
+                    <a href="https://www.linkedin.com/in/prabesh-taksari-29089242b/" target="_blank" rel="noreferrer" className="group flex items-center gap-5" aria-label="Open LinkedIn profile for Prabesh Taksari">
+                      <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black transition-colors group-hover:text-[#E01010]">
                         <Linkedin size={22} aria-hidden="true" />
-                      </div>
-                      <div>
-                        <p className="text-xs font-bold uppercase tracking-[0.24em] text-gray-400">
-                          <span>LinkedIn</span>
-                        </p>
-                        <p className="mt-1 text-lg font-semibold text-white">
-                          <span>linkedin.com/in/prabeshpst</span>
-                        </p>
-                      </div>
-                    </div>
+                      </span>
+                      <span>
+                        <span className="block text-xs font-bold uppercase tracking-[0.24em] text-gray-400 transition-colors group-hover:text-[#E01010]">LinkedIn</span>
+                        <span className="mt-1 block text-lg font-semibold text-white">
+                          <span>linkedin.com/in/prabesh-taksari-29089242b</span>
+                        </span>
+                      </span>
+                    </a>
                   </article>
                   <article className="rounded-2xl border-l-2 border-[#E01010] bg-white/[0.04] p-5 transition-colors hover:bg-white/[0.06]">
                     <a href="https://github.com/PrabeshTaksari" target="_blank" rel="noreferrer" className="group flex items-center gap-5" aria-label="Open GitHub profile for Prabesh Taksari">
@@ -916,7 +918,7 @@ export const Portfolio = () => {
             <a href="#" className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-white transition-colors hover:border-[#E01010] hover:text-[#E01010]" aria-label="GitHub profile">
               <Github size={20} aria-hidden="true" />
             </a>
-            <a href="#" className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-white transition-colors hover:border-[#E01010] hover:text-[#E01010]" aria-label="LinkedIn profile">
+            <a href="https://www.linkedin.com/in/prabesh-taksari-29089242b/" target="_blank" rel="noreferrer" className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-white transition-colors hover:border-[#E01010] hover:text-[#E01010]" aria-label="LinkedIn profile">
               <Linkedin size={20} aria-hidden="true" />
             </a>
             <a href="#" className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-white transition-colors hover:border-[#E01010] hover:text-[#E01010]" aria-label="Email Prabesh">
